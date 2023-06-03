@@ -91,5 +91,5 @@ app.post('/download',(req,res)=>{
 
 
 
-app.listen(process.env.PORT || 3001,()=>console.log("server is running"))
+app.listen(3001,()=>console.log("server is running"))
 
