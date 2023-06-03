@@ -12,7 +12,6 @@ const path = require('path')
 const officegen = require('officegen')
 const fs = require('fs')
 let docx = officegen('docx')
-let pObj = docx.createP()
 let bulletPoints = ""
 let obj = {}
 
@@ -30,16 +29,25 @@ function objToString (obj) {
 
 
 app.get('/',async(req,res)=>{
+  let pObj = docx.createP()
   pObj.addText(`${bulletPoints}`)
-  let out = fs.createWriteStream('example.docx')
+  let out = fs.createWriteStream('info.docx')
   docx.generate(out)
   setTimeout(() => {
-    res.sendFile(path.join(__dirname, 'example.docx'))
-  }, 2000); 
+    res.sendFile(path.join(__dirname, 'info.docx'), function (err) {
+      if (err) {
+        console.error(err);
+      } else {
+        docx = officegen('docx');
+        console.log('info.docx file has been cleared');
+      }
+    });
+  }, 2000);
+  console.log(bulletPoints)
 });
 
 app.get('/fetchPdf',(req,res)=>{
-  res.sendFile(path.join(__dirname, 'invoice.pdf'))
+  res.sendFile(path.join(__dirname, 'info.pdf'))
 });
 
 app.post('/',(req,res)=>{
@@ -67,7 +75,7 @@ app.post('/',(req,res)=>{
 
 
 app.post('/download',(req,res)=>{
-  pdf.create(pdfTemplate(bulletPoints),{}).toFile('invoice.pdf',(err)=>{
+  pdf.create(pdfTemplate(bulletPoints),{}).toFile('info.pdf',(err)=>{
     if(err){
         console.log(err);
     }
@@ -83,5 +91,5 @@ app.post('/download',(req,res)=>{
 
 
 
-app.listen(3001,()=>console.log("server is running"))
+app.listen(process.env.PORT || 3001,()=>console.log("server is running"))
 
