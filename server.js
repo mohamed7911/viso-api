@@ -29,7 +29,6 @@ function objToString (obj) {
 
 
 app.get('/',async(req,res)=>{
-  res.send("Dsadsad")
   let pObj = docx.createP()
   pObj.addText(`${bulletPoints}`)
   let out = fs.createWriteStream('info.docx')
